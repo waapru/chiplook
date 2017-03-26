@@ -22,7 +22,7 @@ class chiplookCatalogController extends ActionsController {
 		foreach ( $objects as $k=>$v )
 			$combine_objects[str_replace('p_','',$k)] = $v;
 		
-		$M = new chiplookSelectedTypeOptionManager($type['slug']);
+		$M = new chiplookSelectedTypeOptionManager($type['slug'],(int)$_GET['typeID']);
 		extract($M->setVariant($combine_objects,$_GET['prdID']));
 		
 		echo ($variantID) ? "<option rel=''></option><option value='$variantID' rel='$extra_price' selected='selected'></option>" : '';

@@ -57,6 +57,7 @@ class chiplooks extends ComponentModule {
 		";
 		if ( $r = mysql_query($q) )
 		{
+			//print_r(mysql_fetch_assoc($r));
 			if ( $row = mysql_fetch_assoc($r) )
 				return true;
 			else
@@ -86,26 +87,43 @@ class chiplooks extends ComponentModule {
 		if ( isset( $local_settings['type'] ) )
 		{
 			$type =  $local_settings['type'];
+			$T = new chiplookTypeLister;
 			$L = new chiplookPositionLister;
 			$positions = $L->getByType($type);
 			// echo '<pre>';
 			// print_r($positions);
 			// echo '</pre>';
-			if ( !empty($positions) )
+			if ( !empty($positions) && $T->checkEnabled($type) )
 			{
+				$ps = array();
+				foreach ( $positions as $k=>$p )
+					if ( $p['enabled'] )
+						$ps[$p['positionID']] = $p;
+				$positions = $ps;
+				
 				$product_info = $smarty->get_template_vars('product_info');
 				$productID = $product_info['productID'];
 				
-				if ( $this->_productHasOption($productID,$type) )
+				if ( $product_positions = chiplookPositionLister::getProductPositions($productID) )
+					foreach ( $product_positions as $p )
+						if ( !$p['enabled'] && isset($positions[$p['positionID']]) )
+							unset($positions[$p['positionID']]);
+				
+				if ( !empty($positions) )
 				{
-					foreach ( $positions as $k=>$p )
-						$positions[$k]['object'] = chiplookSessionStorage::get($productID,$p['positionID']);
-					
-					$smarty->assign('chiplook_typeID',$positions[0]['typeID']);
-					$smarty->assign('chiplook_type_name',$positions[0]['type_name']);
-					$smarty->assign('positions',$positions);
-					$smarty->assign('option',$this->_getTypeOptionHTML($type,$productID));
-					echo $smarty->fetch('chiplooks_chooser.html');
+					if ( $this->_productHasOption($productID,$type) )
+					{
+						foreach ( $positions as $k=>$p )
+							$positions[$k]['object'] = chiplookSessionStorage::get($productID,$p['positionID']);
+						
+						$smarty->assign('positions',$positions);
+						$p = array_shift($positions);
+						$smarty->assign('chiplook_typeID',$p['typeID']);
+						$smarty->assign('chiplook_type_name',$p['type_name']);
+						
+						$smarty->assign('option',$this->_getTypeOptionHTML($type,$productID));
+						echo $smarty->fetch('chiplooks_chooser.html');
+					}
 				}
 			}
 		}

@@ -3,6 +3,7 @@
 class chiplookTypeOptionManager {
 
 	protected $_option_id = 0;
+	protected $_type_id = 0;
 	protected $_type_slug = 0;
 	protected $_option_name_prefix = 'chiptype_';
 	protected $_opt_table = 'SC_product_options';
@@ -10,9 +11,10 @@ class chiplookTypeOptionManager {
 	protected $_name_ru = '';
 	
 	
-	public function __construct($type_slug)
+	public function __construct($type_slug,$type_id = false)
 	{
 		$this->_type_slug = $type_slug;
+		$this->_type_id = $type_id;
 		if ( !empty($this->_type_slug) )
 			$this->_setOption();
 	}

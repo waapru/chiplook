@@ -71,5 +71,17 @@ class chiplookTypeLister extends lister {
 		
 		return $categories;
 	}
+	
+	
+	public function checkEnabled($type)
+	{
+		$q = "SELECT enabled FROM SC_chiplook_types WHERE slug LIKE '$type'";
+		$enabled = 0;
+		if ( $r = mysql_query($q) )
+			if ( $row = mysql_fetch_assoc($r) )
+				$enabled = $row['enabled'];
+		
+		return $enabled;
+	}
 
 }

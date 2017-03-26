@@ -37,7 +37,7 @@ class chiplookSelectedTypeOptionManager extends chiplookTypeOptionManager {
 				if ( $v['position']['typeID'] != $this->_type_id )
 					unset($this->_selected_objects[$k]);
 		// print_r($this->_selected_objects);
-		// print_r($this->_type_id);		
+		// print_r($this->_type_id);
 		if ( !empty($this->_selected_objects) )
 		{
 			$variantID = $this->_getVariantID();
