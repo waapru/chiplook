@@ -1,0 +1,9 @@
+<Connector>
+	<Class>
+		<Name>Chiplooks</Name>
+		<File>class.chiplooks.php</File>
+		<Title>Модуль элементов внешнего вида</Title>
+		<Description></Description>
+		<SingleInstallation>true</SingleInstallation>
+	</Class>
+</Connector>
